@@ -4,10 +4,11 @@ This directory is the authoritative, Git-tracked continuity system for the EIU M
 
 The system is agent/model-independent. Any agent that can read the repository can resume by reading:
 
-1. `docs/ui-modernization/README.md`
-2. `docs/ui-modernization/CURRENT.md`
-3. `docs/ui-modernization/TRACKER.md`
-4. `docs/ui-modernization/DECISIONS.md`
+1. `docs/DOCUMENTATION_AUTHORITY.md`
+2. `docs/ui-modernization/README.md`
+3. `docs/ui-modernization/CURRENT.md`
+4. `docs/ui-modernization/TRACKER.md`
+5. `docs/ui-modernization/DECISIONS.md`
 
 Git-tracked project state is authoritative. Continuity must not depend on a ChatGPT account, Codex session, OMP model, GPT-5.6 Sol/Terra, Gemini, terminal lifetime, or chat memory.
 
@@ -16,26 +17,30 @@ Git-tracked project state is authoritative. Continuity must not depend on a Chat
 Highest to lowest:
 
 1. Explicit current user instruction
-2. Repository business/security instructions
-3. `docs/ui-modernization/DECISIONS.md`
-4. `docs/ui-modernization/CURRENT.md`
-5. `docs/ui-modernization/TRACKER.md`
-6. `docs/ui-modernization/MASTER-PLAN.md`
-7. Audit evidence in `docs/ui-modernization/audits/`
+2. Current source code + declarative schemas/migrations + tests + observable runtime
+3. Repository business/security instructions
+4. `docs/UI_DESIGN_SYSTEM_V2_MASTER.md` (canonical visual/design-system authority)
+5. `docs/ui-modernization/DECISIONS.md`
+6. `docs/ui-modernization/CURRENT.md`
+7. `docs/ui-modernization/TRACKER.md`
+8. `docs/ui-modernization/MASTER-PLAN.md`
+9. Audit evidence in `docs/ui-modernization/audits/`
 
+`docs/UI_LAYOUT_SPEC.md` and `docs/UI_REVIEW_GUIDE.md` are supplemental legacy references only and cannot override the UI Master, current source, or modernization continuity state.
 When two sources disagree, follow the higher-authority source. Do not silently rewrite history. Record deliberate changes in `DECISIONS.md` or append them to `WORKLOG.md`.
 
 ## Session startup protocol
 
 For any new Codex, Gemini, OMP, Orca, IDE-agent, or other coding-agent session working on UI modernization, read in this order:
 
-1. Repository `AGENTS.md` and applicable agent instructions
+1. Repository `AGENTS.md` and `docs/DOCUMENTATION_AUTHORITY.md`
 2. `docs/ui-modernization/README.md`
 3. `docs/ui-modernization/CURRENT.md`
 4. `docs/ui-modernization/TRACKER.md`
 5. `docs/ui-modernization/DECISIONS.md`
-6. `MASTER-PLAN.md` only as needed
-7. Relevant audit evidence only as needed
+6. `docs/UI_DESIGN_SYSTEM_V2_MASTER.md` for visual specifications
+7. `MASTER-PLAN.md` only as needed
+8. Relevant audit evidence only as needed
 
 Then run:
 
