@@ -14,20 +14,34 @@ Git-tracked project state is authoritative. Continuity must not depend on a Chat
 
 ## Source-of-truth hierarchy
 
-Highest to lowest:
+For UI modernization, first apply the authority model in
+`docs/DOCUMENTATION_AUTHORITY.md`.
 
-1. Explicit current user instruction
-2. Current source code + declarative schemas/migrations + tests + observable runtime
-3. Repository business/security instructions
-4. `docs/UI_DESIGN_SYSTEM_V2_MASTER.md` (canonical visual/design-system authority)
-5. `docs/ui-modernization/DECISIONS.md`
-6. `docs/ui-modernization/CURRENT.md`
-7. `docs/ui-modernization/TRACKER.md`
-8. `docs/ui-modernization/MASTER-PLAN.md`
-9. Audit evidence in `docs/ui-modernization/audits/`
+Within the UI-modernization domain, use:
 
-`docs/UI_LAYOUT_SPEC.md` and `docs/UI_REVIEW_GUIDE.md` are supplemental legacy references only and cannot override the UI Master, current source, or modernization continuity state.
-When two sources disagree, follow the higher-authority source. Do not silently rewrite history. Record deliberate changes in `DECISIONS.md` or append them to `WORKLOG.md`.
+1. Explicit current user instruction.
+2. Approved current business/security/product contracts.
+3. Effective current source when determining what the implementation actually
+   does.
+4. `docs/UI_DESIGN_SYSTEM_V2_MASTER.md` for canonical visual/design-system
+   rules.
+5. `docs/ui-modernization/DECISIONS.md` for durable modernization decisions.
+6. `docs/ui-modernization/CURRENT.md` for the active checkpoint.
+7. `docs/ui-modernization/TRACKER.md` for task status and dependencies.
+8. `docs/ui-modernization/MASTER-PLAN.md` for planned sequencing.
+9. Audit evidence in `docs/ui-modernization/audits/` for historical evidence.
+
+`docs/UI_LAYOUT_SPEC.md` and `docs/UI_REVIEW_GUIDE.md` are supplemental
+references only. They cannot override the UI Master, approved current product
+contracts, effective source, or modernization continuity state.
+
+Do not treat an implementation defect as a new design decision merely because
+it exists in source. Conversely, do not claim current implementation behavior
+from documentation alone when the source can be inspected.
+
+Record deliberate modernization decision changes in `DECISIONS.md`.
+Use `WORKLOG.md` for historical execution evidence rather than as an authority
+over current state.
 
 ## Session startup protocol
 

@@ -4,28 +4,115 @@ This document defines the canonical documentation hierarchy, authority order, re
 
 ---
 
-## 1. Document Precedence Hierarchy
+## 1. Authority Model
 
-When requirements, rules, guidelines, or historical records conflict, resolve authority in this strict order:
+Documentation authority is resolved by the type of question being answered.
+Do not use one flat precedence list for product intent, implementation state,
+and production state.
+
+### 1.1 Desired / normative behavior
+
+Use this hierarchy when answering:
+
+> What should MedLabs Calendar do?
 
 1. **Explicit current user instruction**
-   - The user's direct, explicit instruction in the active session takes immediate precedence over written guidelines.
-2. **Current source code + declarative schemas/migrations + tests + observable runtime**
-   - Concrete implementation state, database schema, RLS policies, security functions, test suites, and verified runtime behavior govern all implementation facts.
-3. **`AGENTS.md` (and `.omp/AGENTS.md`)**
-   - Primary agent governance, workflows, safety guardrails, router policies, and repository engineering rules.
-4. **Current business/security contracts and verified operational runbooks present in the active checkout**
-   - Authorization rules, role contracts, domain isolation boundaries, and operational runbooks present in this repository checkout.
-5. **`docs/UI_DESIGN_SYSTEM_V2_MASTER.md`**
-   - Canonical visual and design-system authority. Defines brand colors, typography, layout models, component variants, spacing, radii, shadows, and interaction tokens.
-6. **UI Modernization continuity system (`docs/ui-modernization/`)**
-   - `DECISIONS.md`, `CURRENT.md`, `TRACKER.md`, `WORKLOG.md`, and `MASTER-PLAN.md` own current task status, batch history, and modernization decisions.
-7. **Current OpenSpec scoped contracts (`openspec/`)**
-   - Active change proposals, formal feature specifications, and scoped capability schemas.
-8. **Onboarding and how-to documentation (`README.md`, etc.)**
-   - Developer environment setup, local runtime instructions, and general repository overview.
-9. **Dated audits, reviews, handoffs, and checkpoints**
-   - `docs/ui-modernization/audits/`, legacy review guides, checkpoint files, and dated logs serve as historical evidence only. They cannot override current source, active tracker state, or canonical UI authority.
+   - A direct current instruction from the user takes precedence over earlier
+     repository guidance unless it would violate an immutable safety,
+     authorization, or data-integrity constraint that has not been explicitly
+     changed.
+
+2. **Approved current business, security, and product contracts**
+   - Current authorization rules, role and capability contracts, domain
+     boundaries, lifecycle rules, notification rules, data-integrity
+     invariants, and other explicitly approved product decisions define the
+     intended system behavior.
+
+3. **Approved scoped OpenSpec contracts and durable recorded decisions**
+   - Active, approved specifications refine the relevant business contract
+     within their documented scope.
+   - A historical or unapproved proposal cannot override an approved current
+     contract.
+
+4. **`docs/UI_DESIGN_SYSTEM_V2_MASTER.md` for visual behavior**
+   - This file is the canonical visual/design-system authority only.
+   - It does not redefine authorization, database, lifecycle, email, or other
+     business behavior.
+
+5. **Other current canonical documentation**
+   - Includes current operational runbooks and repository guidance that does
+     not conflict with a higher-authority contract.
+
+Current implementation does not silently redefine desired behavior.
+If source, schema, tests, or runtime disagree with an approved business or
+security contract, treat the mismatch as implementation drift or a defect to
+investigate.
+
+### 1.2 Current implementation truth
+
+Use these sources when answering:
+
+> What does the current checked-out application actually do?
+
+Inspect the effective implementation directly:
+
+1. Current application source.
+2. All relevant declarative schemas.
+3. The effective forward migration chain.
+4. Effective RLS policies, grants, triggers, RPCs, and functions.
+5. Current automated tests.
+6. Deterministic local reproduction or other verified runtime evidence.
+
+Do not infer current implementation from an old review, handoff, initial
+migration, isolated schema file, or dated report when the effective source can
+be inspected.
+
+Tests are evidence of intended/verified behavior, but a passing or stale test
+does not override contradictory effective source or database behavior.
+Investigate the mismatch.
+
+### 1.3 Production truth
+
+Use these sources when answering:
+
+> What is actually live in production?
+
+Production state must be verified independently from:
+
+1. Exact deployed application SHA, including `/api/version` where available.
+2. Actual remote Supabase migration history.
+3. Current production database/configuration state relevant to the operation.
+4. Current deployed integration configuration where applicable.
+
+Repository documentation, commit dates, migration filenames, historical
+deployment workflows, and old production ledgers do not by themselves prove
+live production state.
+
+### 1.4 Agent and documentation governance
+
+`AGENTS.md` is the authoritative repository instruction file for agent
+behavior, engineering workflow, code-navigation policy, verification
+expectations, and repository safety rules.
+
+`docs/DOCUMENTATION_AUTHORITY.md` defines how repository documents relate to
+one another.
+
+Supporting agent-specific entry points such as `CLAUDE.md` and `GEMINI.md`
+must delegate to these authorities and must not introduce competing repository
+policy.
+
+### 1.5 Historical evidence
+
+Dated audits, review reports, handoffs, checkpoints, worklogs, and archived
+findings are historical evidence.
+
+They may explain why a decision was made, but they cannot override:
+
+- an approved current business/security contract,
+- effective current implementation,
+- current UI authority,
+- current modernization state,
+- or independently verified production state.
 
 ---
 
@@ -42,7 +129,7 @@ When requirements, rules, guidelines, or historical records conflict, resolve au
 
 ## 3. Runtime Roles and Capability Contracts
 
-The authoritative runtime roles in `public.app_role` and `user_roles` are:
+The current assignable application roles are:
 
 - `admin`
 - `staff`
@@ -50,12 +137,30 @@ The authoritative runtime roles in `public.app_role` and `user_roles` are:
 - `lecturer`
 - `viewer`
 
+The PostgreSQL enum `public.app_role` still retains the deprecated value
+`importer` so the historical migration chain can be replayed safely.
+
+`importer` is compatibility-only:
+
+- it is not a current primary assignable application role;
+- new application writes and authorization must not rely on it as a primary
+  role;
+- historical migrations or legacy data may still contain the enum value and
+  must not be rewritten merely to remove it.
+
 ### Schedule Import Capability
 
-- Schedule import is **NOT** a standalone runtime role.
-- It is governed by the `profiles.can_import_schedules` boolean capability combined with a supported role (`admin`, `staff`, `lecturer`, `teaching_assistant`) and room-type scope.
-- Legacy "Importer" terminology in older documents is strictly for historical compatibility and must not be used as an independent primary role.
+Schedule import is controlled by:
 
+`profiles.can_import_schedules`
+
+combined with a supported current role and the required room-type scope.
+
+The import capability is not a standalone primary role.
+
+When documentation, tests, or implementation use legacy `Importer`
+terminology, verify whether that usage is historical compatibility or an
+actual defect before changing data or migration history.
 ---
 
 ## 4. Codebase Navigation Policy
